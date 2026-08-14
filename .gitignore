@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+myenv/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Testing / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Type checking / Linting
+.mypy_cache/
+.ruff_cache/
+
+# Logs
+*.log
+
+# Local databases / data
+*.db
+*.sqlite
+*.sqlite3
