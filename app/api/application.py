@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, get_db, require_roles
 from app.models.application import ApplicationStatus
+from app.models.company_membership import MembershipRole
 from app.models.user import User, UserRole
 from app.schemas.application import (
     ApplicationCreate,
@@ -18,7 +19,7 @@ router = APIRouter()
 db_dependency = Depends(get_db)
 cu_dependency = Depends(get_current_active_user)
 candidate_dependency = Depends(require_roles(UserRole.CANDIDATE))
-hr_admin_dependency = Depends(require_roles(UserRole.HR, UserRole.ADMIN))
+hr_admin_dependency = Depends(require_roles(MembershipRole.HR, MembershipRole.RECRUITER, MembershipRole.OWNER, UserRole.ADMIN))
 
 
 @router.post("/jobs/{job_id}/applications",dependencies=[candidate_dependency], response_model=ApplicationResponse, status_code=status.HTTP_201_CREATED)

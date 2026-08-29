@@ -23,6 +23,17 @@ The project is being built incrementally with production-oriented architecture, 
 * [x] SQLAlchemy 2.0 engine setup
 * [x] SQLAlchemy session management
 * [x] PostgreSQL connectivity verification
+* [x] Database models
+* [x] Alembic migrations
+* [x] User management
+* [x] Authentication
+* [x] JWT access tokens
+* [x] Role-based authorization
+* [x] Company management
+* [x] Job management
+* [x] Searching and filtering
+* [x] Pagination
+* [x] Validation and error handling
 
 ### Planned
 
@@ -535,29 +546,29 @@ Performance optimizations and additional infrastructure will be introduced based
 * [x] Environment configuration
 * [x] SQLAlchemy engine
 * [x] Database sessions
-* [ ] Declarative base
-* [ ] Alembic integration
+* [x] Declarative base
+* [x] Alembic integration
 
 ## Phase 2 — Identity
 
-* [ ] User model
-* [ ] Password hashing
-* [ ] Registration
-* [ ] Login
-* [ ] JWT authentication
-* [ ] Current-user dependency
-* [ ] Role-based authorization
+* [x] User model
+* [x] Password hashing
+* [x] Registration
+* [x] Login
+* [x] JWT authentication
+* [x] Current-user dependency
+* [x] Role-based authorization
 
 ## Phase 3 — Job Platform
 
-* [ ] Companies
-* [ ] Jobs
-* [ ] Job publishing
-* [ ] Job updating
-* [ ] Job deletion
-* [ ] Job searching
-* [ ] Filtering
-* [ ] Pagination
+* [x] Companies
+* [x] Jobs
+* [x] Job publishing
+* [x] Job updating
+* [x] Job deletion
+* [x] Job searching
+* [x] Filtering
+* [x] Pagination
 * [ ] Bookmarks
 
 ## Phase 4 — Applications

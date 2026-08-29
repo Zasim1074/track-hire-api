@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, get_db, require_roles
+from app.models.company_membership import MembershipRole
 from app.models.user import User, UserRole
 from app.schemas.company_membership import (
     MembershipCreate,
@@ -15,7 +16,7 @@ from app.services import company_membership_service
 router = APIRouter()
 db_dependency = Depends(get_db)
 cu_dependency = Depends(get_current_active_user)
-hr_admin_dependency = Depends(require_roles(UserRole.ADMIN, UserRole.HR))
+hr_admin_dependency = Depends(require_roles(UserRole.ADMIN, MembershipRole.HR, MembershipRole.RECRUITER, MembershipRole.OWNER))
 
 
 @router.post("/{company_id}/members", dependencies=[hr_admin_dependency], response_model=MembershipResponse, status_code=status.HTTP_201_CREATED)

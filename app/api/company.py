@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.dependencies import get_current_active_user, require_roles
 from app.db.session import get_db
 from app.models.company import CompanySize, Industry
+from app.models.company_membership import MembershipRole
 from app.models.user import User, UserRole
 from app.schemas.company import (
     CompanyCreate,
@@ -17,7 +18,7 @@ from app.services import company_service
 
 router = APIRouter()
 db_dependency = Depends(get_db)
-hr_admin_dependency =  Depends(require_roles(UserRole.ADMIN, UserRole.HR))
+hr_admin_dependency =  Depends(require_roles(UserRole.ADMIN, MembershipRole.HR, MembershipRole.RECRUITER, MembershipRole.OWNER))
 industry_query = Query(None)
 company_size_query = Query(None)
 cu_dependency = Depends(get_current_active_user)

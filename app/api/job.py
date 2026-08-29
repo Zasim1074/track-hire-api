@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.dependencies import get_current_active_user, require_roles
 from app.db.session import get_db
+from app.models.company_membership import MembershipRole
 from app.models.job import EmploymentType, ExperienceLevel, JobStatus, WorkMode
 from app.models.user import User, UserRole
 from app.schemas.job import JobCreate, JobListResponse, JobResponse, JobUpdate
@@ -14,7 +15,7 @@ router = APIRouter()
 
 cu_dependency = Depends(get_current_active_user)
 db_dependency = Depends(get_db)
-hr_admin_required = Depends(require_roles(UserRole.ADMIN, UserRole.HR))
+hr_admin_required = Depends(require_roles(UserRole.ADMIN, MembershipRole.HR, MembershipRole.RECRUITER, MembershipRole.OWNER))
 
 page_query = Query(1)
 page_size_query = Query(10, le=100)

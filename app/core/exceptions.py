@@ -56,3 +56,7 @@ class CandidateProfileAlreadyExistsError(Exception):
 
 class CandidateProfileNotFoundError(Exception):
     pass
+
+
+class ResumeNotFoundError(Exception):
+    pass

@@ -13,7 +13,6 @@ from app.schemas.candidate_profile import (
 )
 from app.services import candidate_profile_service
 
-
 router = APIRouter()
 
 db_dependency = Depends(get_db)

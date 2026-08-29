@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from app.models.company import Company
     from app.models.company_membership import CompanyMembership
     from app.models.job import Job
+    from app.models.resume import Resume
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
@@ -41,6 +42,6 @@ class User(Base):
     company_memberships: Mapped[list["CompanyMembership"]] = relationship(back_populates="user")
     jobs: Mapped[list["Job"]] = relationship(back_populates="creator")
     candidate_profile: Mapped["CandidateProfile | None"] = relationship( back_populates="user", uselist=False, cascade="all, delete-orphan")
-
+    resumes: Mapped[list["Resume"]] = relationship(back_populates="candidate", cascade="all, delete-orphan")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)

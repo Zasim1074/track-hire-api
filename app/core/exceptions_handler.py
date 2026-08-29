@@ -16,6 +16,7 @@ from app.core.exceptions import (
     JobNotFoundError,
     MembershipAlreadyExistsError,
     MembershipNotFoundError,
+    ResumeNotFoundError,
     StatusCannotBeSameError,
 )
 
@@ -63,4 +64,7 @@ async def candidate_profile_already_exists_handler(request:Request, exc: Candida
     return JSONResponse(status_code=409, content={"details" : "Candidate profile already exists."})
 
 async def candidate_profile_not_found_handler(request:Request, exc:CandidateProfileNotFoundError):
-    return JSONResponse(status_code=404, content={"details" : "Profile not found."})
+    return JSONResponse(status_code=404, content={"details" : "Profile doesn't exist."})
+
+async def resume_not_found_handler(request:Request, exc:ResumeNotFoundError):
+    return JSONResponse(status_code=404, content={"details" : "Resume doesn't exist."})

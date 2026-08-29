@@ -18,7 +18,7 @@ def utc_now() -> datetime:
 
 
 class MembershipRole(str, Enum):
-    Owner = "owner"
+    OWNER = "owner"
     HR = "hr"
     RECRUITER = "recruiter"
     

@@ -6,6 +6,7 @@ from app.api.candidate_profile import router as candidate_profile_router
 from app.api.company import router as company_router
 from app.api.company_membership import router as company_membership_router
 from app.api.job import router as job_router
+from app.api.resume import router as resume_router
 from app.api.user import router as user_router
 from app.core.exceptions import (
     ApplicationAlreadyExistsError,
@@ -22,6 +23,7 @@ from app.core.exceptions import (
     JobNotFoundError,
     MembershipAlreadyExistsError,
     MembershipNotFoundError,
+    ResumeNotFoundError,
     StatusCannotBeSameError,
 )
 from app.core.exceptions_handler import (
@@ -39,6 +41,7 @@ from app.core.exceptions_handler import (
     job_not_found_handler,
     membership_already_exists_handler,
     membership_not_found_handler,
+    resume_not_found_handler,
     status_cannot_be_same_handler,
 )
 
@@ -63,6 +66,8 @@ app.add_exception_handler(MembershipAlreadyExistsError, membership_already_exist
 app.add_exception_handler(MembershipNotFoundError, membership_not_found_handler)
 app.add_exception_handler(CandidateProfileAlreadyExistsError, candidate_profile_already_exists_handler)
 app.add_exception_handler(CandidateProfileNotFoundError, candidate_profile_not_found_handler)
+app.add_exception_handler(ResumeNotFoundError, resume_not_found_handler)
+
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 app.include_router(user_router, prefix="/users", tags=["Users"])
@@ -71,3 +76,4 @@ app.include_router(job_router, prefix="/api", tags=["Jobs"])
 app.include_router(application_router, prefix="/api", tags=["Applications"])
 app.include_router(company_membership_router, prefix="/companies", tags=["Company Members"])
 app.include_router(candidate_profile_router, prefix="/candidates", tags=["Candidate Profile"])
+app.include_router(resume_router, prefix="/resumes", tags=["Resumes"])
