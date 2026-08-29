@@ -1,0 +1,46 @@
+import uuid
+from datetime import datetime, timezone
+from enum import Enum
+from typing import TYPE_CHECKING
+
+from sqlalchemy import Boolean, DateTime, String
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.db.base import Base
+
+if TYPE_CHECKING:
+    from app.models.application import Application
+    from app.models.candidate_profile import CandidateProfile
+    from app.models.company import Company
+    from app.models.company_membership import CompanyMembership
+    from app.models.job import Job
+
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+class UserRole(str, Enum):
+    ADMIN = "admin"
+    CANDIDATE = "candidate"
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    first_name: Mapped[str] = mapped_column(String(50), nullable=False)
+    last_name: Mapped[str] = mapped_column(String(50), nullable=False)
+    role: Mapped[UserRole] = mapped_column(SQLEnum(UserRole, name="user_role"), nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    
+    applications: Mapped[list["Application"]] = relationship(back_populates="candidate")
+    companies: Mapped[list["Company"]] = relationship(back_populates="owner")
+    company_memberships: Mapped[list["CompanyMembership"]] = relationship(back_populates="user")
+    jobs: Mapped[list["Job"]] = relationship(back_populates="creator")
+    candidate_profile: Mapped["CandidateProfile | None"] = relationship( back_populates="user", uselist=False, cascade="all, delete-orphan")
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
