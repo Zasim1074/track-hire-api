@@ -13,6 +13,7 @@ from app.core.exceptions import (
     InvalidCredentialsError,
 )
 from app.db.session import get_db
+from app.models.application import Application
 from app.models.company_membership import CompanyMembership, MembershipRole
 from app.models.user import User, UserRole
 from app.repositories.company_membership_repository import get_active_membership
@@ -93,3 +94,28 @@ def require_company_membership(db: Session, company_id: UUID, user: User) -> Com
         raise ForbiddenError
 
     return membership
+
+
+def require_application_access(
+    db: Session,
+    application: Application,
+    current_user: User,
+) -> None:
+
+    if current_user.role == UserRole.ADMIN:
+        return
+
+    if current_user.role == UserRole.CANDIDATE:
+        if application.candidate_id != current_user.id:
+            raise ForbiddenError
+        return
+
+    if current_user.role == UserRole.HR:
+        require_company_membership(
+            db,
+            application.job.company_id,
+            current_user,
+        )
+        return
+
+    raise ForbiddenError

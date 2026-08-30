@@ -4,6 +4,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.application import Application, ApplicationStatus
+from app.models.application_history import ApplicationStatusHistory
 
 
 def create(db: Session, application: Application) -> Application:
@@ -83,3 +84,27 @@ def get_by_job_id(
     
     applications = list(db.scalars(stmt))
     return applications, total
+
+
+
+
+def create(
+    db: Session,
+    history: ApplicationStatusHistory,
+) -> ApplicationStatusHistory:
+    db.add(history)
+    db.flush()
+    return history
+
+
+def get_by_application_id(
+    db: Session,
+    application_id: UUID,
+) -> list[ApplicationStatusHistory]:
+    stmt = (
+        select(ApplicationStatusHistory)
+        .where(ApplicationStatusHistory.application_id == application_id)
+        .order_by(ApplicationStatusHistory.created_at.asc())
+    )
+
+    return list(db.scalars(stmt))

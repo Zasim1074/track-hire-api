@@ -36,3 +36,18 @@ class ApplicationListResponse(BaseModel):
     page_size: int
     total: int
     total_pages: int
+    
+    
+
+class ApplicationStatusHistoryResponse(BaseModel):
+    id: uuid.UUID
+    application_id: uuid.UUID
+    from_status: ApplicationStatus | None
+    to_status: ApplicationStatus
+    changed_by: uuid.UUID
+    notes: str | None
+    created_at: datetime
+
+    model_config = ConfigDict(
+        from_attributes=True,
+    )

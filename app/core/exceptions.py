@@ -66,3 +66,29 @@ class InvalidResumeFileError(Exception):
     pass
 
 
+class AlreadyAppliedError(Exception):
+    pass
+
+
+class JobNotAcceptingApplicationsError(Exception):
+    pass
+
+
+class InvalidApplicationStatusTransitionError(Exception):
+    pass
+
+
+class InterviewConflictError(Exception):
+    pass
+
+
+class InterviewerNotFoundError(Exception):
+    pass
+
+
+class InterviewerNotEligibleError(Exception):
+    pass
+
+
+class InterviewNotAllowedError(Exception):
+    pass

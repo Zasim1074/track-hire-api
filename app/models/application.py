@@ -10,6 +10,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
 
 if TYPE_CHECKING:
+    from app.models.application_history import ApplicationStatusHistory
+    from app.models.interview import Interview
     from app.models.job import Job
     from app.models.resume import Resume
     from app.models.user import User
@@ -88,6 +90,13 @@ class Application(Base):
     )
 
     resume: Mapped["Resume"] = relationship()
+    status_history: Mapped[list["ApplicationStatusHistory"]] = relationship(
+        cascade="all, delete-orphan", order_by="ApplicationStatusHistory.created_at"
+    )
+    
+    interviews: Mapped[list["Interview"]] = relationship(
+    back_populates="application",
+    cascade="all, delete-orphan",)
 
     applied_at: Mapped[datetime] = mapped_column(
         DateTime,

@@ -11,6 +11,7 @@ from app.schemas.application import (
     ApplicationCreate,
     ApplicationListResponse,
     ApplicationResponse,
+    ApplicationStatusHistoryResponse,
     ApplicationStatusUpdate,
 )
 from app.services import application_Service
@@ -45,3 +46,8 @@ def update_application_Staus(application_id:UUID, payload:ApplicationStatusUpdat
 @router.post("/applications/{applications_id}/withdraw", dependencies=[candidate_dependency], response_model=ApplicationResponse, status_code=status.HTTP_200_OK)
 def withdraw_application(application_id:UUID, db:Session=db_dependency, current_user:User=user_dependency):
     return application_Service.withdraw_application(db, application_id, current_user)
+
+
+@router.get("/{application_id}/history", response_model=list[ApplicationStatusHistoryResponse])
+def get_application_history(application_id: UUID, db: Session = db_dependency, current_user: User = user_dependency):
+    return application_Service.get_application_history(db, application_id, current_user)
