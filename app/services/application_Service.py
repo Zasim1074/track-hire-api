@@ -45,7 +45,7 @@ def apply_for_job(
     application = Application(
         job_id=job.id,
         candidate_id=current_user.id,
-        resume_url=payload.resume_url,
+        resume_id=payload.resume_id,
         cover_letter=payload.cover_letter,
     )
 

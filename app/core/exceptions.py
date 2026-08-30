@@ -60,3 +60,9 @@ class CandidateProfileNotFoundError(Exception):
 
 class ResumeNotFoundError(Exception):
     pass
+
+
+class InvalidResumeFileError(Exception):
+    pass
+
+

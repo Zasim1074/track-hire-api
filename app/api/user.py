@@ -8,12 +8,12 @@ from app.schemas.user import UserResponse
 
 router = APIRouter()
 db_dependency = Depends(get_db)
-cu_dependency = Depends(get_current_active_user)
+user_dependency = Depends(get_current_active_user)
 hr_admin_required = Depends(require_roles(UserRole.ADMIN, MembershipRole.HR, MembershipRole.RECRUITER, MembershipRole.OWNER))
 
 
 @router.get("/me", response_model=UserResponse)
-def get_me(current_user: User = cu_dependency):
+def get_me(current_user: User = user_dependency):
     return current_user
 
 

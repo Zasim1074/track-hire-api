@@ -21,11 +21,11 @@ db_dependency = Depends(get_db)
 hr_admin_dependency =  Depends(require_roles(UserRole.ADMIN, MembershipRole.HR, MembershipRole.RECRUITER, MembershipRole.OWNER))
 industry_query = Query(None)
 company_size_query = Query(None)
-cu_dependency = Depends(get_current_active_user)
+user_dependency = Depends(get_current_active_user)
 
 
 @router.post("/", dependencies=[hr_admin_dependency], status_code=status.HTTP_201_CREATED, response_model=dict)
-def add(payload: CompanyCreate, current_user:User = cu_dependency, db: Session = db_dependency):
+def add(payload: CompanyCreate, current_user:User = user_dependency, db: Session = db_dependency):
     return company_service.create_company(db, current_user,payload)
 
 
@@ -35,12 +35,12 @@ def get_company(company_id: UUID, db: Session = db_dependency):
 
 
 @router.patch("/{company_id}", dependencies=[hr_admin_dependency], response_model=CompanyResponse)
-def update_company(company_id: UUID, payload:CompanyUpdate, current_user:User=cu_dependency, db:Session= db_dependency) -> CompanyResponse:
+def update_company(company_id: UUID, payload:CompanyUpdate, current_user:User=user_dependency, db:Session= db_dependency) -> CompanyResponse:
     return company_service.update_company(db, current_user, company_id, payload)
 
 
 @router.delete("/{company_id}", dependencies=[hr_admin_dependency], status_code=204)
-def delete_company(company_id: UUID, current_user: User = cu_dependency, db:Session=db_dependency):
+def delete_company(company_id: UUID, current_user: User = user_dependency, db:Session=db_dependency):
     return company_service.delete_company(db, current_user, company_id)
 
 

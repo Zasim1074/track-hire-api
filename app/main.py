@@ -8,42 +8,7 @@ from app.api.company_membership import router as company_membership_router
 from app.api.job import router as job_router
 from app.api.resume import router as resume_router
 from app.api.user import router as user_router
-from app.core.exceptions import (
-    ApplicationAlreadyExistsError,
-    ApplicationNotFoundError,
-    CandidateProfileAlreadyExistsError,
-    CandidateProfileNotFoundError,
-    CannotDeleteCompanyError,
-    CompanyAlreadyExistsError,
-    CompanyNotFoundError,
-    EmailAlreadyExistsError,
-    ForbiddenError,
-    InactiveUserError,
-    InvalidCredentialsError,
-    JobNotFoundError,
-    MembershipAlreadyExistsError,
-    MembershipNotFoundError,
-    ResumeNotFoundError,
-    StatusCannotBeSameError,
-)
-from app.core.exceptions_handler import (
-    application_already_exists_handler,
-    application_not_found_handler,
-    candidate_profile_already_exists_handler,
-    candidate_profile_not_found_handler,
-    cannot_delete_company_handler,
-    company_already_exist_handler,
-    company_not_found_handler,
-    email_exists_handler,
-    forbidden_handler,
-    inactive_user_handler,
-    invalid_credentials_handler,
-    job_not_found_handler,
-    membership_already_exists_handler,
-    membership_not_found_handler,
-    resume_not_found_handler,
-    status_cannot_be_same_handler,
-)
+from app.core import exceptions, exceptions_handler
 
 app = FastAPI(
     title="track-hire-api",
@@ -51,22 +16,22 @@ app = FastAPI(
     description="User based(Admin, HR & Candidate) workflow with proper Authentication and Authorization",
 )
 
-app.add_exception_handler(EmailAlreadyExistsError, email_exists_handler)
-app.add_exception_handler(ForbiddenError, forbidden_handler)
-app.add_exception_handler(InvalidCredentialsError, invalid_credentials_handler)
-app.add_exception_handler(InactiveUserError, inactive_user_handler)
-app.add_exception_handler(CompanyAlreadyExistsError, company_already_exist_handler)
-app.add_exception_handler(CompanyNotFoundError, company_not_found_handler)
-app.add_exception_handler(JobNotFoundError, job_not_found_handler)
-app.add_exception_handler(CannotDeleteCompanyError, cannot_delete_company_handler)
-app.add_exception_handler(ApplicationAlreadyExistsError, application_already_exists_handler)
-app.add_exception_handler(ApplicationNotFoundError, application_not_found_handler)
-app.add_exception_handler(StatusCannotBeSameError, status_cannot_be_same_handler)
-app.add_exception_handler(MembershipAlreadyExistsError, membership_already_exists_handler)
-app.add_exception_handler(MembershipNotFoundError, membership_not_found_handler)
-app.add_exception_handler(CandidateProfileAlreadyExistsError, candidate_profile_already_exists_handler)
-app.add_exception_handler(CandidateProfileNotFoundError, candidate_profile_not_found_handler)
-app.add_exception_handler(ResumeNotFoundError, resume_not_found_handler)
+app.add_exception_handler(exceptions.EmailAlreadyExistsError, exceptions_handler.email_exists_handler)
+app.add_exception_handler(exceptions.ForbiddenError, exceptions_handler.forbidden_handler)
+app.add_exception_handler(exceptions.InvalidCredentialsError, exceptions_handler.invalid_credentials_handler)
+app.add_exception_handler(exceptions.InactiveUserError, exceptions_handler.inactive_user_handler)
+app.add_exception_handler(exceptions.CompanyAlreadyExistsError, exceptions_handler.company_already_exist_handler)
+app.add_exception_handler(exceptions.CompanyNotFoundError, exceptions_handler.company_not_found_handler)
+app.add_exception_handler(exceptions.JobNotFoundError, exceptions_handler.job_not_found_handler)
+app.add_exception_handler(exceptions.CannotDeleteCompanyError, exceptions_handler.cannot_delete_company_handler)
+app.add_exception_handler(exceptions.ApplicationAlreadyExistsError, exceptions_handler.application_already_exists_handler)
+app.add_exception_handler(exceptions.ApplicationNotFoundError, exceptions_handler.application_not_found_handler)
+app.add_exception_handler(exceptions.StatusCannotBeSameError, exceptions_handler.status_cannot_be_same_handler)
+app.add_exception_handler(exceptions.MembershipAlreadyExistsError, exceptions_handler.membership_already_exists_handler)
+app.add_exception_handler(exceptions.MembershipNotFoundError, exceptions_handler.membership_not_found_handler)
+app.add_exception_handler(exceptions.CandidateProfileAlreadyExistsError, exceptions_handler.candidate_profile_already_exists_handler)
+app.add_exception_handler(exceptions.CandidateProfileNotFoundError, exceptions_handler.candidate_profile_not_found_handler)
+app.add_exception_handler(exceptions.ResumeNotFoundError, exceptions_handler.resume_not_found_handler)
 
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])

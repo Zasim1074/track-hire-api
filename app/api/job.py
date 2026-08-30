@@ -13,7 +13,7 @@ from app.services import job_service
 
 router = APIRouter()
 
-cu_dependency = Depends(get_current_active_user)
+user_dependency = Depends(get_current_active_user)
 db_dependency = Depends(get_db)
 hr_admin_required = Depends(require_roles(UserRole.ADMIN, MembershipRole.HR, MembershipRole.RECRUITER, MembershipRole.OWNER))
 
@@ -27,7 +27,7 @@ experience_level_query = Query(None)
 
 
 @router.post("/companies/{company_id}/jobs", dependencies=[hr_admin_required] ,response_model=JobResponse,status_code=status.HTTP_201_CREATED)
-def create_job(company_id: UUID,payload: JobCreate,current_user: User = cu_dependency,db: Session = db_dependency):
+def create_job(company_id: UUID,payload: JobCreate,current_user: User = user_dependency,db: Session = db_dependency):
     return job_service.create_job(db, company_id, current_user, payload)
 
 
@@ -42,20 +42,20 @@ def get_job(job_id: UUID, db: Session = db_dependency):
 
 
 @router.patch("/jobs/{job_id}", dependencies=[hr_admin_required],response_model=JobResponse, status_code=status.HTTP_200_OK)
-def update_job(job_id: UUID, payload:JobUpdate, current_user: User = cu_dependency, db:Session = db_dependency):
+def update_job(job_id: UUID, payload:JobUpdate, current_user: User = user_dependency, db:Session = db_dependency):
     return job_service.update_job(db, job_id, payload, current_user)
 
 
 @router.delete("/jobs/{job_id}", dependencies=[hr_admin_required], status_code=204)
-def delete_job(job_id:UUID, current_user:User = cu_dependency, db:Session=db_dependency):
+def delete_job(job_id:UUID, current_user:User = user_dependency, db:Session=db_dependency):
     return job_service.delete_job(db, job_id, current_user)
 
 
 @router.post("/jobs/{job_id}/publish", dependencies=[hr_admin_required], response_model=JobResponse, status_code=status.HTTP_200_OK)
-def publish_job(job_id:UUID, current_user:User=cu_dependency, db:Session=db_dependency):
+def publish_job(job_id:UUID, current_user:User=user_dependency, db:Session=db_dependency):
     return job_service.publish_job(db, job_id, current_user)
 
 
 @router.post("/jobs/{job_id}/close", dependencies=[hr_admin_required], response_model=JobResponse, status_code=status.HTTP_200_OK)
-def close_job(job_id:UUID, current_user:User=cu_dependency, db:Session=db_dependency):
+def close_job(job_id:UUID, current_user:User=user_dependency, db:Session=db_dependency):
     return job_service.close_job(db, job_id, current_user)

@@ -7,7 +7,7 @@ from app.models.application import ApplicationStatus
 
 
 class ApplicationCreate(BaseModel):
-    resume_url: str | None = None
+    resume_id: uuid.UUID
     cover_letter: str | None = None
 
 
@@ -20,7 +20,7 @@ class ApplicationResponse(BaseModel):
     id: uuid.UUID
     job_id: uuid.UUID
     candidate_id: uuid.UUID
-    resume_url: str | None
+    resume_id: uuid.UUID
     cover_letter: str | None
     status: ApplicationStatus
     recruiter_notes: str | None

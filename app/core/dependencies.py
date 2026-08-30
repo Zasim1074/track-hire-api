@@ -49,17 +49,17 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = security_depend
     return user
 
 
-cu_dependency = Depends(get_current_user)
+user_dependency = Depends(get_current_user)
 
 
-def get_current_active_user(current_user: User = cu_dependency) -> User:
+def get_current_active_user(current_user: User = user_dependency) -> User:
     if not current_user.is_active:
         raise InactiveUserError
     return current_user
 
 
 def require_roles(*required_roles: UserRole):
-    def role_checker(current_user: User = cu_dependency) -> User:
+    def role_checker(current_user: User = user_dependency) -> User:
         if current_user.role not in required_roles:
             raise ForbiddenError
         return current_user
@@ -67,7 +67,7 @@ def require_roles(*required_roles: UserRole):
     return role_checker
 
 
-def require_company_owner(company_id: UUID, current_user: User = cu_dependency, db: Session = db_dependency) -> User:
+def require_company_owner(company_id: UUID, current_user: User = user_dependency, db: Session = db_dependency) -> User:
     if current_user.role == UserRole.ADMIN:
         return current_user
 
