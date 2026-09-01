@@ -51,3 +51,7 @@ class ApplicationStatusHistoryResponse(BaseModel):
     model_config = ConfigDict(
         from_attributes=True,
     )
+    
+    
+class ApplicationReject(BaseModel):
+    reason: str | None = None

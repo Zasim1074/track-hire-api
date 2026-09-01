@@ -15,6 +15,7 @@ from app.core.exceptions import (
 from app.db.session import get_db
 from app.models.application import Application
 from app.models.company_membership import CompanyMembership, MembershipRole
+from app.models.interview import Interview
 from app.models.user import User, UserRole
 from app.repositories.company_membership_repository import get_active_membership
 from app.repositories.company_repository import get_company_by_id
@@ -116,6 +117,38 @@ def require_application_access(
             application.job.company_id,
             current_user,
         )
+        return
+
+    raise ForbiddenError
+
+
+
+def require_interview_access(
+    db: Session,
+    interview: Interview,
+    current_user: User,
+) -> None:
+
+    application = interview.application
+
+    if current_user.role == UserRole.ADMIN:
+        return
+
+    if current_user.role == UserRole.CANDIDATE:
+
+        if application.candidate_id != current_user.id:
+            raise ForbiddenError
+
+        return
+
+    if current_user.role == UserRole.HR:
+
+        require_company_membership(
+            db,
+            application.job.company_id,
+            current_user,
+        )
+
         return
 
     raise ForbiddenError

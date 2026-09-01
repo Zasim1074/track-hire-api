@@ -92,3 +92,27 @@ class InterviewerNotEligibleError(Exception):
 
 class InterviewNotAllowedError(Exception):
     pass
+
+
+class InterviewNotFoundError(Exception):
+    pass
+
+
+class InvalidInterviewStatusTransitionError(Exception):
+    pass
+
+
+class FeedbackAlreadyExistsError(Exception):
+    pass
+
+
+class FeedbackNotFoundError(Exception):
+    pass
+
+
+class FeedbackNotAllowedError(Exception):
+    pass
+
+
+class ApplicationDecisionNotAllowedError(Exception):
+    pass

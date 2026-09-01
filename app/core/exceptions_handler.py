@@ -53,16 +53,23 @@ async def resume_not_found_handler(request:Request, exc:exceptions.ResumeNotFoun
     return JSONResponse(status_code=404, content={"details" : "Resume doesn't exist."})
 
 async def invalid_resume_file_handler(request: Request, exc: exceptions.InvalidResumeFileError):
-    return JSONResponse(status_code=400, content={"detail": "Invalid resume file"})
+    return JSONResponse(status_code=400, content={"detail": "Invalid resume file."})
 
 async def already_applied_handler(request: Request, exc: exceptions.AlreadyAppliedError):
-    return JSONResponse(status_code=409, content={"detail": "You have already applied for this job"})
+    return JSONResponse(status_code=409, content={"detail": "You have already applied for this job."})
 
 async def job_not_accepting_applications_handler(request: Request, exc: exceptions.JobNotAcceptingApplicationsError):
-    return JSONResponse(status_code=400, content={"detail": "This job is not accepting applications"})
+    return JSONResponse(status_code=400, content={"detail": "This job is not accepting applications."})
 
 async def invalid_application_status_transition_handler(request: Request, exc:exceptions.InvalidApplicationStatusTransitionError):
-    return JSONResponse(status_code=400, content={"detail": "Invalid application status transition"})
+    return JSONResponse(status_code=400, content={"detail": "Invalid application status transition."})
 
 async def interview_conflict_handler(request: Request, exc:exceptions.InterviewConflictError):
-    return JSONResponse(status_code=409, content={"detail": "Interviewer already has an interview scheduled during this time"})
+    return JSONResponse(status_code=409, content={"detail": "Interviewer already has an interview scheduled during this time."})
+
+async def interview_not_found_handler(request: Request, exc:exceptions.InterviewNotFoundError):
+    return JSONResponse(status_code=404, content={"detail": "Interview not found."})
+
+async def invalid_interview_status_transition_handler(request: Request, exc:exceptions.InvalidInterviewStatusTransitionError):
+    return JSONResponse(status_code=400, content={"detail": "Invalid interview status transition."})
+

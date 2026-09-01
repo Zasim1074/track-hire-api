@@ -6,6 +6,7 @@ from app.api.candidate_profile import router as candidate_profile_router
 from app.api.company import router as company_router
 from app.api.company_membership import router as company_membership_router
 from app.api.interview import router as interview_router
+from app.api.interview_feedback import router as interview_feedback_router
 from app.api.job import router as job_router
 from app.api.resume import router as resume_router
 from app.api.user import router as user_router
@@ -51,3 +52,4 @@ app.include_router(company_membership_router, prefix="/companies", tags=["Compan
 app.include_router(resume_router, prefix="/resumes", tags=["Resumes"])
 app.include_router(user_router, prefix="/users", tags=["Users"])
 app.include_router(interview_router, prefix="/interviews",tags=["Interviews"])
+app.include_router(interview_feedback_router)

@@ -8,6 +8,7 @@ from app.core.dependencies import require_application_access, require_company_me
 from app.core.exceptions import (
     AlreadyAppliedError,
     ApplicationAlreadyExistsError,
+    ApplicationDecisionNotAllowedError,
     ApplicationNotFoundError,
     ForbiddenError,
     InvalidApplicationStatusTransitionError,
@@ -17,6 +18,7 @@ from app.core.exceptions import (
 )
 from app.models.application import Application, ApplicationStatus
 from app.models.application_history import ApplicationStatusHistory
+from app.models.interview import InterviewStatus
 from app.models.job import JobStatus
 from app.models.user import User, UserRole
 from app.repositories.application_repository import (
@@ -32,6 +34,7 @@ from app.repositories.resume_repository import get_by_id as get_resume_by_id
 from app.schemas.application import (
     ApplicationCreate,
     ApplicationListResponse,
+    ApplicationReject,
     ApplicationResponse,
     ApplicationStatusHistoryResponse,
     ApplicationStatusUpdate,
@@ -321,5 +324,119 @@ def get_application(
         application,
         current_user,
     )
+
+    return ApplicationResponse.model_validate(application)
+
+
+def select_application(
+    db: Session,
+    application_id: UUID,
+    current_user: User,
+) -> ApplicationResponse:
+
+    application = get_by_id(
+        db,
+        application_id,
+    )
+
+    if application is None:
+        raise ApplicationNotFoundError
+
+    if current_user.role not in {
+        UserRole.HR,
+        UserRole.ADMIN,
+    }:
+        raise ForbiddenError
+
+    if current_user.role == UserRole.HR:
+        require_company_membership(
+            db,
+            application.job.company_id,
+            current_user,
+        )
+
+    if application.status in {
+        ApplicationStatus.SELECTED,
+        ApplicationStatus.REJECTED,
+        ApplicationStatus.WITHDRAWN,
+    }:
+        raise InvalidApplicationStatusTransitionError
+
+    if application.status != ApplicationStatus.INTERVIEW:
+        raise ApplicationDecisionNotAllowedError
+
+    # Candidate must have at least one completed interview
+    completed_interview = any(
+        interview.status == InterviewStatus.COMPLETED
+        for interview in application.interviews
+    )
+    interviews = application.interviews
+
+    if not interviews:
+        raise ApplicationDecisionNotAllowedError
+
+    if any(
+        interview.status != InterviewStatus.COMPLETED
+        for interview in interviews
+    ):
+        raise ApplicationDecisionNotAllowedError
+
+    if not completed_interview:
+        raise ApplicationDecisionNotAllowedError
+
+    application.status = ApplicationStatus.SELECTED
+
+    db.commit()
+    db.refresh(application)
+
+    return ApplicationResponse.model_validate(application)
+
+
+def reject_application(
+    db: Session,
+    application_id: UUID,
+    payload: ApplicationReject,
+    current_user: User,
+) -> ApplicationResponse:
+
+    application = get_by_id(
+        db,
+        application_id,
+    )
+
+    if application is None:
+        raise ApplicationNotFoundError
+
+    if current_user.role not in {
+        UserRole.HR,
+        UserRole.ADMIN,
+    }:
+        raise ForbiddenError
+
+    if current_user.role == UserRole.HR:
+        require_company_membership(
+            db,
+            application.job.company_id,
+            current_user,
+        )
+
+    if application.status in {
+        ApplicationStatus.SELECTED,
+        ApplicationStatus.REJECTED,
+        ApplicationStatus.WITHDRAWN,
+    }:
+        raise InvalidApplicationStatusTransitionError
+
+    if application.status != ApplicationStatus.INTERVIEW:
+        raise ApplicationDecisionNotAllowedError
+
+    application.status = ApplicationStatus.REJECTED
+
+    # Store reason if you have a rejection_reason column
+    if payload.reason:
+        application.recruiter_notes = payload.reason
+
+    db.commit()
+    db.refresh(application)
 
     return ApplicationResponse.model_validate(application)

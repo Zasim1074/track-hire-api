@@ -22,7 +22,10 @@ def validate_scheduled_at(cls, value: datetime) -> datetime:
 class InterviewCreate(BaseModel):
     interviewer_id: uuid.UUID
     scheduled_at: datetime
-    duration_minutes: int = Field(gt=0, le=480)
+    duration_minutes: int = Field(
+        gt=0,
+        le=480,
+    )
     meeting_url: str | None = None
     interview_type: InterviewType
     notes: str | None = None
@@ -38,7 +41,6 @@ class InterviewUpdate(BaseModel):
     )
     meeting_url: str | None = None
     interview_type: InterviewType | None = None
-    status: InterviewStatus | None = None
     notes: str | None = None
 
 

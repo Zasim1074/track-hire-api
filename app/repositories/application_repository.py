@@ -86,17 +86,6 @@ def get_by_job_id(
     return applications, total
 
 
-
-
-def create(
-    db: Session,
-    history: ApplicationStatusHistory,
-) -> ApplicationStatusHistory:
-    db.add(history)
-    db.flush()
-    return history
-
-
 def get_by_application_id(
     db: Session,
     application_id: UUID,

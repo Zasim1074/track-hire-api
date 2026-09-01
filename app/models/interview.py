@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import TYPE_CHECKING
 
-from sqlalchemy import DateTime, ForeignKey, Integer, Text
+from sqlalchemy import DateTime, ForeignKey, Integer, Text, UniqueConstraint
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -11,6 +11,7 @@ from app.db.base import Base
 
 if TYPE_CHECKING:
     from app.models.application import Application
+    from app.models.interview_feedback import InterviewFeedback
     from app.models.user import User
 
 
@@ -35,6 +36,13 @@ class InterviewStatus(str, Enum):
 
 class Interview(Base):
     __tablename__ = "interviews"
+    __table_args__ = (
+    UniqueConstraint(
+        "application_id",
+        "round_number",
+        name="uq_interview_application_round",
+    ),
+)
 
     id: Mapped[uuid.UUID] = mapped_column(
         primary_key=True,
@@ -84,12 +92,20 @@ class Interview(Base):
         default=InterviewStatus.SCHEDULED,
     )
 
+    round_number: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
     notes: Mapped[str | None] = mapped_column(
         Text,
         nullable=True,
     )
 
     interviewer: Mapped["User"] = relationship()
+    feedback: Mapped["InterviewFeedback | None"] = relationship(
+        back_populates="interview", uselist=False, cascade="all, delete-orphan"
+    )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
