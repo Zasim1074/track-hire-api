@@ -36,86 +36,21 @@ class InterviewStatus(str, Enum):
 
 class Interview(Base):
     __tablename__ = "interviews"
-    __table_args__ = (
-    UniqueConstraint(
-        "application_id",
-        "round_number",
-        name="uq_interview_application_round",
-    ),
-)
-
-    id: Mapped[uuid.UUID] = mapped_column(
-        primary_key=True,
-        default=uuid.uuid4,
-    )
-
-    application_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("applications.id"),
-        nullable=False,
-    )
+    __table_args__ = (UniqueConstraint("application_id", "round_number", name="uq_interview_application_round"),)
+    
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True,default=uuid.uuid4)
+    application_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("applications.id"),nullable=False)
     application: Mapped["Application"] = relationship(back_populates="interviews")
-
-    interviewer_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("users.id"),
-        nullable=False,
-    )
-
-    scheduled_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-    )
-
-    duration_minutes: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-    )
-
-    meeting_url: Mapped[str | None] = mapped_column(
-        Text,
-        nullable=True,
-    )
-
-    interview_type: Mapped[InterviewType] = mapped_column(
-        SQLEnum(
-            InterviewType,
-            name="interview_type",
-        ),
-        nullable=False,
-    )
-
-    status: Mapped[InterviewStatus] = mapped_column(
-        SQLEnum(
-            InterviewStatus,
-            name="interview_status",
-        ),
-        nullable=False,
-        default=InterviewStatus.SCHEDULED,
-    )
-
-    round_number: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-    )
-
-    notes: Mapped[str | None] = mapped_column(
-        Text,
-        nullable=True,
-    )
-
+    interviewer_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"),nullable=False)
+    scheduled_at: Mapped[datetime] = mapped_column(DateTime,nullable=False)
+    duration_minutes: Mapped[int] = mapped_column(Integer,nullable=False)
+    meeting_url: Mapped[str | None] = mapped_column(Text,nullable=True)
+    interview_type: Mapped[InterviewType] = mapped_column(SQLEnum(InterviewType,name="interview_type"), nullable=False)
+    status: Mapped[InterviewStatus] = mapped_column(SQLEnum(InterviewStatus, name="interview_status"), nullable=False, default=InterviewStatus.SCHEDULED)
+    round_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    notes: Mapped[str | None] = mapped_column(Text,nullable=True)
     interviewer: Mapped["User"] = relationship()
-    feedback: Mapped["InterviewFeedback | None"] = relationship(
-        back_populates="interview", uselist=False, cascade="all, delete-orphan"
-    )
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=get_utc,
-        nullable=False,
-    )
-
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=get_utc,
-        onupdate=get_utc,
-        nullable=False,
-    )
+    feedback: Mapped["InterviewFeedback | None"] = relationship(back_populates="interview", uselist=False, cascade="all, delete-orphan")
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=get_utc, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=get_utc, onupdate=get_utc, nullable=False)

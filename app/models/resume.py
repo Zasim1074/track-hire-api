@@ -17,45 +17,12 @@ def utc_now() -> datetime:
 class Resume(Base):
     __tablename__ = "resumes"
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        primary_key=True,
-        default=uuid.uuid4,
-    )
-
-    candidate_id: Mapped[uuid.UUID] = mapped_column(
-        ForeignKey("users.id"),
-        nullable=False,
-    )
-
-    file_name: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False,
-    )
-
-    file_url: Mapped[str] = mapped_column(
-        String(500),
-        nullable=False,
-    )
-
-    is_default: Mapped[bool] = mapped_column(
-        Boolean,
-        default=False,
-        nullable=False,
-    )
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=utc_now,
-        nullable=False,
-    )
-
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=utc_now,
-        onupdate=utc_now,
-        nullable=False,
-    )
-
-    candidate: Mapped["User"] = relationship(
-        back_populates="resumes",
-    )
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True,default=uuid.uuid4)
+    candidate_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"),nullable=False)
+    file_name: Mapped[str] = mapped_column(String(255),nullable=False)
+    file_url: Mapped[str] = mapped_column(String(500),nullable=False)
+    is_default: Mapped[bool] = mapped_column(Boolean,default=False,nullable=False)
+    candidate: Mapped["User"] = relationship(back_populates="resumes")
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime,default=utc_now,nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime,default=utc_now,onupdate=utc_now,nullable=False)
