@@ -12,11 +12,7 @@ from app.schemas.interview_feedback import (
 )
 from app.services import interview_feedback_service
 
-
-router = APIRouter(
-    prefix="/interviews",
-    tags=["Interview Feedback"],
-)
+router = APIRouter()
 
 db_dependency = Depends(get_db)
 user_dependency = Depends(get_current_active_user)

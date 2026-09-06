@@ -74,31 +74,15 @@ def create_feedback(
     return InterviewFeedbackResponse.model_validate(created_feedback)
 
 
-def get_feedback(
-    db: Session,
-    interview_id: UUID,
-    current_user: User,
-) -> InterviewFeedbackResponse:
-
-    interview = get_interview_by_id(
-        db,
-        interview_id,
-    )
+def get_feedback(db: Session, interview_id: UUID, current_user: User) -> InterviewFeedbackResponse:
+    interview = get_interview_by_id(db, interview_id)
 
     if interview is None:
         raise InterviewNotFoundError
 
     # Access to the interview itself determines feedback access
-    require_interview_access(
-        db,
-        interview,
-        current_user,
-    )
-
-    feedback = get_by_interview_id(
-        db,
-        interview_id,
-    )
+    require_interview_access(db, interview, current_user)
+    feedback = get_by_interview_id(db, interview_id)
 
     if feedback is None:
         raise FeedbackNotFoundError

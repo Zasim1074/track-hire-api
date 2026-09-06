@@ -37,23 +37,23 @@ The project is being built incrementally with production-oriented architecture, 
 
 ### Planned
 
-* [ ] Database models
-* [ ] Alembic migrations
-* [ ] User management
-* [ ] Authentication
-* [ ] JWT access tokens
-* [ ] Role-based authorization
-* [ ] Candidate workflows
-* [ ] Company management
-* [ ] Job management
-* [ ] Job applications
+* [x] Database models
+* [x] Alembic migrations
+* [x] User management
+* [x] Authentication
+* [x] JWT access tokens
+* [x] Role-based authorization
+* [x] Candidate workflows
+* [x] Company management
+* [x] Job management
+* [x] Job applications
 * [ ] Bookmarks
-* [ ] Resume upload
-* [ ] Searching and filtering
-* [ ] Pagination
-* [ ] Admin APIs
-* [ ] Validation and error handling
-* [ ] Structured logging
+* [x] Resume upload
+* [x] Searching and filtering
+* [x] Pagination
+* [x] Admin APIs
+* [x] Validation and error handling
+* [x] Structured logging
 * [ ] Automated testing
 * [ ] Docker
 * [ ] Production deployment
@@ -573,20 +573,20 @@ Performance optimizations and additional infrastructure will be introduced based
 
 ## Phase 4 — Applications
 
-* [ ] Job applications
-* [ ] Application status
-* [ ] Candidate workflow
-* [ ] Recruiter workflow
-* [ ] Application authorization
-* [ ] Resume upload
+* [x] Job applications
+* [x] Application status
+* [x] Candidate workflow
+* [x] Recruiter workflow
+* [x] Application authorization
+* [x] Resume upload
 
 ## Phase 5 — Administration
 
-* [ ] Admin roles
-* [ ] User management
-* [ ] Company management
-* [ ] Job moderation
-* [ ] Administrative APIs
+* [x] Admin roles
+* [x] User management
+* [x] Company management
+* [x] Job moderation
+* [x] Administrative APIs
 
 ## Phase 6 — Quality & Production
 

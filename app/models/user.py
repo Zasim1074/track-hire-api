@@ -26,6 +26,7 @@ def utc_now() -> datetime:
 class UserRole(str, Enum):
     ADMIN = "admin"
     CANDIDATE = "candidate"
+    HR = "hr"
 
 
 class User(Base):
@@ -38,15 +39,16 @@ class User(Base):
     last_name: Mapped[str] = mapped_column(String(50), nullable=False)
     role: Mapped[UserRole] = mapped_column(SQLEnum(UserRole, name="user_role"), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    candidate_profile: Mapped["CandidateProfile | None"] = relationship( back_populates="user", uselist=False, cascade="all, delete-orphan")
     
+    resumes: Mapped[list["Resume"]] = relationship(back_populates="candidate", cascade="all, delete-orphan")
     applications: Mapped[list["Application"]] = relationship(back_populates="candidate")
+    jobs: Mapped[list["Job"]] = relationship(back_populates="creator")
+    
     companies: Mapped[list["Company"]] = relationship(back_populates="owner")
     company_memberships: Mapped[list["CompanyMembership"]] = relationship(back_populates="user")
-    jobs: Mapped[list["Job"]] = relationship(back_populates="creator")
-    candidate_profile: Mapped["CandidateProfile | None"] = relationship( back_populates="user", uselist=False, cascade="all, delete-orphan")
-    resumes: Mapped[list["Resume"]] = relationship(back_populates="candidate", cascade="all, delete-orphan")
-    interviews: Mapped[list["Interview"]] = relationship(back_populates="interviewer")
-    interviewer: Mapped["User"] = relationship(back_populates="interviews")
+    
+    interviews: Mapped[list["Interview"]] = relationship( "Interview", foreign_keys="Interview.interviewer_id", back_populates="interviewer")
     interview_feedback: Mapped[list["InterviewFeedback"]] = relationship()
     
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now, nullable=False)

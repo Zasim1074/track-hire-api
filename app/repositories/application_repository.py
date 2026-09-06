@@ -86,10 +86,7 @@ def get_by_job_id(
     return applications, total
 
 
-def get_by_application_id(
-    db: Session,
-    application_id: UUID,
-) -> list[ApplicationStatusHistory]:
+def get_by_application_id(db: Session, application_id: UUID) -> list[ApplicationStatusHistory]:
     stmt = (
         select(ApplicationStatusHistory)
         .where(ApplicationStatusHistory.application_id == application_id)

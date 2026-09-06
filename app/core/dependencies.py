@@ -111,7 +111,7 @@ def require_application_access(
             raise ForbiddenError
         return
 
-    if current_user.role == UserRole.HR:
+    if current_user.role == MembershipRole.HR:
         require_company_membership(
             db,
             application.job.company_id,
@@ -141,7 +141,7 @@ def require_interview_access(
 
         return
 
-    if current_user.role == UserRole.HR:
+    if current_user.role == MembershipRole.HR:
 
         require_company_membership(
             db,

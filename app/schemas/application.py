@@ -37,7 +37,6 @@ class ApplicationListResponse(BaseModel):
     total: int
     total_pages: int
     
-    
 
 class ApplicationStatusHistoryResponse(BaseModel):
     id: uuid.UUID
@@ -48,9 +47,7 @@ class ApplicationStatusHistoryResponse(BaseModel):
     notes: str | None
     created_at: datetime
 
-    model_config = ConfigDict(
-        from_attributes=True,
-    )
+    model_config = ConfigDict(from_attributes=True)
     
     
 class ApplicationReject(BaseModel):

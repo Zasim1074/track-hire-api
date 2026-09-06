@@ -7,13 +7,8 @@ from app.models.interview_feedback import Recommendation
 
 
 class InterviewFeedbackCreate(BaseModel):
-    rating: int = Field(
-        ge=1,
-        le=5,
-    )
-
+    rating: int = Field(ge=1, le=5)
     recommendation: Recommendation
-
     strengths: str | None = None
     weaknesses: str | None = None
     comments: str | None = None
@@ -31,6 +26,4 @@ class InterviewFeedbackResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-    model_config = ConfigDict(
-        from_attributes=True,
-    )
+    model_config = ConfigDict(from_attributes=True)

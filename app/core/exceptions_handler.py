@@ -1,75 +1,26 @@
-from fastapi import Request
+import logging
+
+from fastapi import HTTPException, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
-from app.core import exceptions
+from app.core.exceptions import AppException
+
+logger = logging.getLogger(__name__)
 
 
-async def email_exists_handler(request:Request, exc:exceptions.EmailAlreadyExistsError ):
-    return JSONResponse(status_code=409, content={"detail" : "Email is already registered."})
+async def app_exception_handler(request: Request, exc: AppException):
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
-async def invalid_credentials_handler(request:Request, exc:exceptions.InvalidCredentialsError):
-    return JSONResponse(status_code=401, content={"detail" : "Invalid Credentials."})
 
-async def inactive_user_handler(request:Request, exc:exceptions.InactiveUserError):
-    return JSONResponse(status_code=403, content={"detail" : "User is inactive."})
+async def validation_exception_hanlder(request: Request, exc: RequestValidationError):
+    return JSONResponse(status_code=422, content={"detail": "Request validation failed.", "errors": exc.errors()})
 
-async def forbidden_handler(request:Request, exc:exceptions.ForbiddenError):
-    return JSONResponse(status_code=401, content={"details" : "You don't have enough permissions."})
 
-async def company_already_exist_handler(request: Request, exc:exceptions.CompanyAlreadyExistsError):
-    return JSONResponse(status_code=409, content={"details" : "Company with this website already exists."})
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail}, headers=exc.headers)
 
-async def company_not_found_handler(request:Request, exc:exceptions.CompanyNotFoundError):
-    return JSONResponse(status_code=404, content={"details" : "Company doesn't exist."})
 
-async def cannot_delete_company_handler(request:Request, exc:exceptions.CannotDeleteCompanyError):
-    return JSONResponse(status_code=409, content={"details" : "Company can't deleted because there are jobs listed."})
-
-async def job_not_found_handler(request:Request, exc:exceptions.JobNotFoundError):
-    return JSONResponse(status_code=404, content={"details" : "Job doesn't exist."})
-
-async def application_not_found_handler(request:Request, exc:exceptions.ApplicationNotFoundError):
-    return JSONResponse(status_code=404, content={"details" : "Application doesn't exist."})
-
-async def application_already_exists_handler(request:Request, exc:exceptions.ApplicationAlreadyExistsError):
-    return JSONResponse(status_code=409, content={"details" : "Application already exists"})
-
-async def status_cannot_be_same_handler(request:Request, exc:exceptions. StatusCannotBeSameError):
-    return JSONResponse(status_code=409, content={"details" : "Please update the status, new one can't be same."})
-
-async def membership_already_exists_handler(request:Request, exc:exceptions.MembershipAlreadyExistsError):
-    return JSONResponse(status_code=409, content={"details" : "You already have a membership."})
-
-async def membership_not_found_handler(request:Request, exc:exceptions.MembershipNotFoundError):
-    return JSONResponse(status_code=404, content={"detatils" : "Membership doesn't exist."})
-
-async def candidate_profile_already_exists_handler(request:Request, exc:exceptions.CandidateProfileAlreadyExistsError):
-    return JSONResponse(status_code=409, content={"details" : "Candidate profile already exists."})
-
-async def candidate_profile_not_found_handler(request:Request, exc:exceptions.CandidateProfileNotFoundError):
-    return JSONResponse(status_code=404, content={"details" : "Profile doesn't exist."})
-
-async def resume_not_found_handler(request:Request, exc:exceptions.ResumeNotFoundError):
-    return JSONResponse(status_code=404, content={"details" : "Resume doesn't exist."})
-
-async def invalid_resume_file_handler(request: Request, exc: exceptions.InvalidResumeFileError):
-    return JSONResponse(status_code=400, content={"detail": "Invalid resume file."})
-
-async def already_applied_handler(request: Request, exc: exceptions.AlreadyAppliedError):
-    return JSONResponse(status_code=409, content={"detail": "You have already applied for this job."})
-
-async def job_not_accepting_applications_handler(request: Request, exc: exceptions.JobNotAcceptingApplicationsError):
-    return JSONResponse(status_code=400, content={"detail": "This job is not accepting applications."})
-
-async def invalid_application_status_transition_handler(request: Request, exc:exceptions.InvalidApplicationStatusTransitionError):
-    return JSONResponse(status_code=400, content={"detail": "Invalid application status transition."})
-
-async def interview_conflict_handler(request: Request, exc:exceptions.InterviewConflictError):
-    return JSONResponse(status_code=409, content={"detail": "Interviewer already has an interview scheduled during this time."})
-
-async def interview_not_found_handler(request: Request, exc:exceptions.InterviewNotFoundError):
-    return JSONResponse(status_code=404, content={"detail": "Interview not found."})
-
-async def invalid_interview_status_transition_handler(request: Request, exc:exceptions.InvalidInterviewStatusTransitionError):
-    return JSONResponse(status_code=400, content={"detail": "Invalid interview status transition."})
-
+async def unexpected_request_handler(request: Request, exc: Exception):
+    logger.exception("Unhandled exception | method=%s | path=%s", request.method, request.url.path)
+    return JSONResponse(status_code=500, content={"detail": "Internal server Error"})

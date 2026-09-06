@@ -131,7 +131,7 @@ def get_application_interviews(db: Session, application_id: UUID, current_user: 
     if current_user.role == UserRole.CANDIDATE and application.candidate_id != current_user.id:
             raise ForbiddenError
     # HR → must belong to application's company
-    elif current_user.role == UserRole.HR:
+    elif current_user.role == MembershipRole.HR:
         require_company_membership(db,application.job.company_id, current_user)
     # Admin → allowed
     elif current_user.role == UserRole.ADMIN:
@@ -159,12 +159,12 @@ def update_interview(
         raise InterviewNotFoundError
 
     if current_user.role not in {
-        UserRole.HR,
+        MembershipRole.HR,
         UserRole.ADMIN,
     }:
         raise ForbiddenError
 
-    if current_user.role == UserRole.HR:
+    if current_user.role == MembershipRole.HR:
         require_company_membership(
             db,
             interview.application.job.company_id,
@@ -202,7 +202,7 @@ def update_interview(
     if interviewer is None:
         raise InterviewerNotFoundError
 
-    if interviewer.role != UserRole.HR:
+    if interviewer.role != MembershipRole.HR:
         raise InterviewerNotEligibleError
 
     require_company_membership(
@@ -243,7 +243,7 @@ def cancel_interview(db: Session,interview_id: UUID,current_user: User) -> Inter
         raise ForbiddenError
 
     # HR must belong to the company's hiring team
-    if current_user.role == UserRole.HR:
+    if current_user.role == MembershipRole.HR:
         require_company_membership(db,interview.application.job.company_id,current_user,)
 
     # Only scheduled interviews can be cancelled

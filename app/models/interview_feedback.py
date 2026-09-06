@@ -38,7 +38,7 @@ class InterviewFeedback(Base):
     comments: Mapped[str | None] = mapped_column(Text,nullable=True)
     
     interview: Mapped["Interview"] = relationship(back_populates="feedback")
-    interviewer: Mapped["User"] = relationship(back_populates="interviews")
+    interviewer: Mapped["User"] = relationship(back_populates="interview_feedback")
     
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), defaul=get_utc,nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=get_utc, onupdate=get_utc, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=get_utc, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=get_utc, onupdate=get_utc, nullable=False)
